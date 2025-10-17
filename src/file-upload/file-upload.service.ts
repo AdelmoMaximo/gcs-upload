@@ -15,9 +15,6 @@ export class FileUploadService {
   private readonly folderName = 'pending';
 
   constructor() {
-    // O cliente Storage irá usar automaticamente as credenciais do ambiente
-    // (GOOGLE_APPLICATION_CREDENTIALS) se estiver rodando localmente,
-    // ou as credenciais da service account se estiver no GCP (ex: Cloud Run, GKE).
     this.storage = new Storage();
   }
 
@@ -26,11 +23,9 @@ export class FileUploadService {
   ): Promise<{ message: string; filePath: string }> {
     const bucket = this.storage.bucket(this.bucketName);
 
-    // Gera um nome de arquivo único para evitar colisões
     const fileName = `${this.folderName}/${uuidv4()}.json`;
     const file = bucket.file(fileName);
 
-    // Converte o corpo do JSON para uma string formatada
     const fileContents = JSON.stringify(payload, null, 2);
 
     try {

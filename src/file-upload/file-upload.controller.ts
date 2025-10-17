@@ -8,7 +8,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  @Post('save-json')
+  @Post('')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Recebe um JSON e salva em um bucket no GCP' })
   @ApiBody({ type: UploadPayloadDto })
