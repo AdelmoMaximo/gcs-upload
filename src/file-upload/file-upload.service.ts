@@ -1,5 +1,3 @@
-// src/file-upload/file-upload.service.ts
-
 import {
   Injectable,
   InternalServerErrorException,
@@ -21,25 +19,19 @@ export class FileUploadService {
     this.storage = new Storage();
   }
 
-  /**
-   * Receives a validated DTO and saves its 'body' property to a GCS file.
-   */
   async saveJsonToBucket(
     payload: UploadPayloadDto,
   ): Promise<{ message: string; fileName: string }> {
-    // A validação do payload já foi feita pelo DTO e ValidationPipe.
     const bucket = this.storage.bucket(this.bucketName);
     const folderName = 'pending';
     const uuid = uuidv4();
 
-    // Usa a propriedade 'redirect' (em minúsculas) para o nome do arquivo.
     const sanitizedRedirect = payload.redirect.toLowerCase();
     const fileName = `${sanitizedRedirect}_${uuid}.json`;
     const fullPath = `${folderName}/${fileName}`;
     const file = bucket.file(fullPath);
 
-    // Salva APENAS o conteúdo da propriedade 'body' no arquivo.
-    const fileContents = JSON.stringify(payload.body, null, 2);
+    const fileContents = JSON.stringify(payload, null, 2);
 
     try {
       this.logger.log(`Uploading file to gs://${this.bucketName}/${fullPath}`);
@@ -57,10 +49,6 @@ export class FileUploadService {
       );
     }
   }
-
-  /**
-   * O método de verificação de status permanece o mesmo.
-   */
   async checkFileStatus(
     fileName: string,
   ): Promise<{ status: string; data?: any }> {
